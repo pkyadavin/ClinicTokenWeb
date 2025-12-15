@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Doctor Clinic Token Display</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(135deg, #0f4c75, #3282b8);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .token-container {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 40px 60px;
+      text-align: center;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+      min-width: 400px;
+    }
+
+    .clinic-name {
+      font-size: 32px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .doctor-name {
+      font-size: 20px;
+      opacity: 0.9;
+      margin-bottom: 30px;
+    }
+
+    .now-serving {
+      font-size: 26px;
+      margin-bottom: 10px;
+    }
+
+    .token-number {
+      font-size: 120px;
+      font-weight: bold;
+      background: #ffffff;
+      color: #0f4c75;
+      border-radius: 15px;
+      padding: 20px 40px;
+      display: inline-block;
+      margin: 20px 0;
+    }
+
+    .footer {
+      margin-top: 20px;
+      font-size: 16px;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+  <div class="token-container">
+    <div class="clinic-name">City Health Clinic</div>
+    <div class="doctor-name">Dr. A. Kumar (MD)</div>
+
+    <div class="now-serving">Now Serving Token</div>
+    <div id="tokenNumber" class="token-number">12</div>
+
+    <div class="footer">
+      Please wait for your turn 🙏
+    </div>
+  </div>
+
+<script>
+  const API_URL = "https://token-g2cmdpfpdmemgjdz.canadacentral-01.azurewebsites.net/api/token";
+
+  async function fetchToken() {
+    try {
+      const response = await fetch(API_URL);
+      const data = await response.json();
+      document.getElementById("tokenNumber").textContent = data.currentToken;
+    } catch (err) {
+      console.error("Failed to fetch token", err);
+    }
+  }
+
+  setInterval(fetchToken, 1000);
+  fetchToken();
+</script>
+</body>
+</html>

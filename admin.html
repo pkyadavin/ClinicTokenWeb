@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clinic Token Admin</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(135deg, #1b262c, #0f4c75);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .admin-container {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 40px;
+      border-radius: 16px;
+      width: 350px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    .current-token {
+      font-size: 18px;
+      margin-bottom: 20px;
+      opacity: 0.9;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      font-size: 18px;
+      border-radius: 8px;
+      border: none;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      font-size: 18px;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      background: #ffffff;
+      color: #0f4c75;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #e6e6e6;
+    }
+
+    .hint {
+      margin-top: 15px;
+      font-size: 14px;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-container">
+    <h1>Token Admin</h1>
+    <div class="current-token">
+      Current Token: <strong id="currentToken">--</strong>
+    </div>
+
+    <input
+      type="number"
+      id="tokenInput"
+      placeholder="Enter token number"
+      min="1"
+    />
+
+    <button onclick="updateToken()">Update Token</button>
+
+    <div class="hint">
+      This will instantly update the display screen
+    </div>
+  </div>
+ <script>
+  const API_URL = "https://token-g2cmdpfpdmemgjdz.canadacentral-01.azurewebsites.net/api/token";
+
+  async function loadCurrentToken() {
+    const res = await fetch(API_URL);
+    const data = await res.json();
+    document.getElementById("currentToken").textContent = data.currentToken;
+  }
+
+  async function updateToken() {
+    const tokenValue = document.getElementById("tokenInput").value;
+
+    if (!tokenValue || tokenValue <= 0) {
+      alert("Enter a valid token number");
+      return;
+    }
+
+    await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        currentToken: parseInt(tokenValue)
+      })
+    });
+
+    document.getElementById("tokenInput").value = "";
+    loadCurrentToken();
+  }
+
+  loadCurrentToken();
+</script>
+
+</body>
+</html>
