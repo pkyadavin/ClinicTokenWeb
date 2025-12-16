@@ -96,6 +96,7 @@
     const res = await fetch(API_URL);
     const data = await res.json();
     document.getElementById("currentToken").textContent = data.currentToken;
+    document.getElementById("tokenInput").value=data.currentToken+1;
   }
 
   async function updateToken() {
