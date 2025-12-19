@@ -59,36 +59,58 @@
       font-size: 16px;
       opacity: 0.8;
     }
+    .grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.token-card {
+  background: white;
+  color: #0f4c75;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.token {
+  font-size: 72px;
+  font-weight: bold;
+}
+
   </style>
 </head>
 <body>
   <div class="token-container">
-    <div class="clinic-name">City Health Clinic</div>
-    <div class="doctor-name">Dr. A Krishna</div>
+ <div id="tokenList" class="grid"></div>
 
-    <div class="now-serving">Now Serving Token</div>
-    <div id="tokenNumber" class="token-number">0</div>
-
-    <div class="footer">
-      Please wait for your turn 🙏
-    </div>
   </div>
 
-<script>
-  const API_URL = "https://token-g2cmdpfpdmemgjdz.canadacentral-01.azurewebsites.net/api/token";
 
-  async function fetchToken() {
-    try {
-      const response = await fetch(API_URL);
-      const data = await response.json();
-      document.getElementById("tokenNumber").textContent = data.currentToken;
-    } catch (err) {
-      console.error("Failed to fetch token", err);
-    }
+<script>
+const API_URL = "https://token-g2cmdpfpdmemgjdz.canadacentral-01.azurewebsites.net/api/doctors";
+
+  async function loadTokens() {
+    const res = await fetch(API_URL);
+    const doctors = await res.json();
+
+    const container = document.getElementById("tokenList");
+    container.innerHTML = "";
+
+    doctors.forEach(d => {
+      container.innerHTML += `
+        <div class="token-card">
+          <div class="doctor-name">${d.doctorName}</div>
+          <div class="counter">Counter ${d.counterNumber}</div>
+          <div class="token">${d.currentToken}</div>
+        </div>
+      `;
+    });
   }
 
-  setInterval(fetchToken, 1000);
-  fetchToken();
+  setInterval(loadTokens, 1000);
+  loadTokens();
 </script>
+
 </body>
 </html>
